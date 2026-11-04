@@ -59,6 +59,11 @@ export function normalizar(texto: string): string {
   return texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 }
 
+// Identificador para el enlace directo: "Thank U, Next" → "thank-u-next".
+export function slug(f: Fragancia): string {
+  return normalizar(f.nombre).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
 // Todo el texto en el que se puede buscar una fragancia. Las notas van antes que los acordes
 // para que al buscar "vainilla" se muestre la nota y no el acorde "avainillado".
 export function textoBuscable(f: Fragancia): string[] {

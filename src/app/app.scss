@@ -291,6 +291,22 @@
   h3 { font-family: var(--sans); font-weight: 400; font-size: clamp(1.6rem, 4vw, 2.3rem); margin: 0; span { color: #b5ab9c; } }
   .para { font-size: 1.3rem; color: #4ea0f0; margin: .2rem 0 0; }
 }
+.compartir {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin-top: .8rem;
+  padding: .4rem 1rem;
+  border: 1px solid rgba(201, 162, 75, .4);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--oro-claro);
+  font: inherit;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: background .2s;
+  &:hover { background: rgba(201, 162, 75, .12); }
+}
 .modal-cuerpo { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: center; }
 .modal-foto {
   background: #fff;

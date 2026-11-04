@@ -1,6 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { COLORES_ACORDES, Categoria, FRAGANCIAS, Fragancia, INSTAGRAM, PROMO, TAMANOS, WHATSAPP } from './data/perfumes';
-import { Estilo, Momento, Para, Respuestas, normalizar, recomendar, similares, textoBuscable } from './recomendador';
+import { Estilo, Momento, Para, Respuestas, normalizar, recomendar, similares, slug, textoBuscable } from './recomendador';
 
 type Filtro = Categoria | 'Todos';
 
@@ -10,7 +10,10 @@ const PARA: Record<Categoria, string> = { Mujer: 'para Mujeres', Hombre: 'para H
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
-  host: { '(document:keydown.escape)': 'cerrarDetalle()' }
+  host: {
+    '(document:keydown.escape)': 'cerrarDetalle()',
+    '(window:hashchange)': 'abrirDesdeEnlace()',
+  }
 })
 export class App {
   protected readonly filtros: Filtro[] = ['Todos', 'Mujer', 'Hombre', 'Unisex'];
@@ -106,7 +109,7 @@ export class App {
 
   protected whatsappUrl(f?: Fragancia): string {
     const texto = f
-      ? `Hola, me interesa la fragancia ${f.nombre} (inspiración ${f.casa}) en ${this.tamanoElegido(f)} ml.`
+      ? `Hola, me interesa la fragancia ${f.nombre} (inspiración ${f.casa}) en ${this.tamanoElegido(f)} ml.\n${this.enlace(f)}`
       : 'Hola, quiero información sobre sus fragancias.';
     return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(texto)}`;
   }
@@ -119,14 +122,89 @@ export class App {
     return f ? similares(f, FRAGANCIAS) : [];
   });
 
+  // Enlaces directos: cada fragancia tiene su dirección (…/#sauvage) que abre su detalle.
+  // Si el detalle se abrió con un clic, se agrega al historial para que el botón
+  // "atrás" del celular cierre la ventana en vez de salir de la página.
+  private abiertoConHistorial = false;
+  protected readonly copiado = signal(false);
+
+  constructor() {
+    this.abrirDesdeEnlace();
+  }
+
+  protected enlace(f: Fragancia): string {
+    return location.origin + location.pathname + '#' + slug(f);
+  }
+
+  // Al cargar la página y cada vez que cambia el "#…" de la dirección.
+  protected abrirDesdeEnlace(): void {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const f = FRAGANCIAS.find(p => slug(p) === id);
+    if (f) {
+      this.mostrar(f);
+    } else if (this.detalle()) {
+      this.abiertoConHistorial = false;
+      this.ocultar();
+    }
+  }
+
   protected abrirDetalle(f: Fragancia): void {
+    const url = '#' + slug(f);
+    if (this.detalle()) {
+      // De una sugerencia a otra: se reemplaza, para que "atrás" cierre de una vez.
+      history.replaceState(null, '', url);
+    } else {
+      history.pushState(null, '', url);
+      this.abiertoConHistorial = true;
+    }
+    this.mostrar(f);
+  }
+
+  protected cerrarDetalle(): void {
+    if (!this.detalle()) return;
+    if (this.abiertoConHistorial) {
+      this.abiertoConHistorial = false;
+      history.back();
+    } else {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+    this.ocultar();
+  }
+
+  // En el celular abre el menú de compartir del teléfono; en el computador copia el enlace.
+  protected async compartir(f: Fragancia): Promise<void> {
+    const url = this.enlace(f);
+    if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+      try {
+        await navigator.share({ title: `${f.nombre} | ANKARA Perfumería`, text: `Mira esta fragancia: ${f.nombre} (inspiración ${f.casa})`, url });
+      } catch {
+        // El usuario cerró el menú de compartir.
+      }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      // Respaldo para navegadores que no permiten el portapapeles moderno.
+      const campo = document.createElement('textarea');
+      campo.value = url;
+      document.body.appendChild(campo);
+      campo.select();
+      document.execCommand('copy');
+      campo.remove();
+    }
+    this.copiado.set(true);
+    setTimeout(() => this.copiado.set(false), 2000);
+  }
+
+  private mostrar(f: Fragancia): void {
     this.detalle.set(f);
     document.body.style.overflow = 'hidden';
     // Al saltar de una sugerencia a otra, vuelve al inicio de la ventana.
     document.querySelector('.modal-fondo')?.scrollTo({ top: 0 });
   }
 
-  protected cerrarDetalle(): void {
+  private ocultar(): void {
     this.detalle.set(null);
     document.body.style.overflow = '';
   }

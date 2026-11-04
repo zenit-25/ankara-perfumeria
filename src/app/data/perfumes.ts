@@ -144,6 +144,14 @@ export const FRAGANCIAS: Fragancia[] = [
       fondo: ['vainilla', 'haba tonka', 'ámbar', 'sándalo', 'cedro'],
     },
   },
+  // AHLI no está en Fragrantica: datos de la descripción de la tienda Disfragancias.
+  {
+    nombre: 'Karpos',
+    casa: 'AHLI',
+    categoria: 'Unisex',
+    imagen: 'https://cdn.shopify.com/s/files/1/0847/7553/4899/files/ahli_karpos.png?v=1785460361&width=500',
+    acordes: ['afrutados', 'tropical', 'dulce', 'cálido especiado', 'amaderado', 'cítrico', 'almizclado'],
+  },
   {
     nombre: 'CK One',
     casa: 'Calvin Klein',
@@ -305,6 +313,7 @@ export const COLORES_ACORDES: Record<string, string> = {
   'terrosos': '#544838',
   'ahumado': '#827487',
   'afrutados': '#fc4b29',
+  'tropical': '#ffb41f',
   'caramelo': '#dda356',
   'balsámico': '#ad8359',
   'canela': '#d2691e',

@@ -1,30 +1,80 @@
-// Catálogo de la tienda. Edita, agrega o quita perfumes aquí.
-// "imagen" es opcional: pon la foto en /public/perfumes/ y escribe 'perfumes/mi-foto.jpg'.
-// Si no hay imagen, se dibuja un frasco con el color indicado.
+// Catálogo de la tienda. Edita, agrega o quita fragancias aquí.
+// "acordes" va de mayor a menor intensidad (como en Fragrantica); el color se asigna solo.
+// "imagen" es opcional: pon la foto en /public/img/ y escribe 'img/mi-foto.jpg'.
+// Si no hay imagen, se usa el frasco ANKARA.
 
 export type Categoria = 'Mujer' | 'Hombre' | 'Unisex';
 
-export interface Perfume {
+export interface Fragancia {
   nombre: string;
-  marca: string;
+  casa: string;
   categoria: Categoria;
-  notas: string;
-  precio: number;
-  color: string;
+  acordes: string[];
   imagen?: string;
-  destacado?: boolean;
 }
 
-export const PERFUMES: Perfume[] = [
-  { nombre: 'Rosa Imperial', marca: 'Maison Ankara', categoria: 'Mujer', notas: 'Rosa, peonía, almizcle blanco', precio: 185000, color: '#e8a0b4', destacado: true },
-  { nombre: 'Noche de Ámbar', marca: 'Maison Ankara', categoria: 'Unisex', notas: 'Ámbar, vainilla, sándalo', precio: 210000, color: '#d4913b', destacado: true },
-  { nombre: 'Cedro Salvaje', marca: 'Maison Ankara', categoria: 'Hombre', notas: 'Cedro, bergamota, vetiver', precio: 195000, color: '#5b7a5a', destacado: true },
-  { nombre: 'Jardín Blanco', marca: 'Fleur & Co.', categoria: 'Mujer', notas: 'Jazmín, nardo, mandarina', precio: 165000, color: '#f0e6d2' },
-  { nombre: 'Oud Real', marca: 'Oriente', categoria: 'Unisex', notas: 'Oud, azafrán, cuero', precio: 260000, color: '#6b3a2a' },
-  { nombre: 'Brisa Marina', marca: 'Azur', categoria: 'Hombre', notas: 'Notas marinas, limón, salvia', precio: 150000, color: '#6fa8c7' },
-  { nombre: 'Vainilla Dorada', marca: 'Fleur & Co.', categoria: 'Mujer', notas: 'Vainilla, caramelo, haba tonka', precio: 170000, color: '#e3c27a' },
-  { nombre: 'Tabaco & Miel', marca: 'Oriente', categoria: 'Hombre', notas: 'Tabaco, miel, canela', precio: 225000, color: '#8a5a2b' },
+export interface Tamano {
+  ml: number;
+  precio: number;
+}
+
+// Mismos tamaños y precios para todas las fragancias.
+export const TAMANOS: Tamano[] = [
+  { ml: 30, precio: 30000 },
+  { ml: 50, precio: 45000 },
+  { ml: 100, precio: 75000 },
 ];
+
+export const FRAGANCIAS: Fragancia[] = [
+  {
+    nombre: 'Odyssey Mandarin Sky',
+    casa: 'Armaf',
+    categoria: 'Hombre',
+    acordes: ['cítrico', 'caramelo', 'dulce', 'ámbar', 'aromático', 'avainillado', 'amaderado'],
+  },
+];
+
+// Colores de cada acorde. Si usas uno que no está aquí, sale en dorado.
+export const COLORES_ACORDES: Record<string, string> = {
+  'cítrico': '#f5f552',
+  'caramelo': '#b5874a',
+  'dulce': '#c4313a',
+  'ámbar': '#8a3f14',
+  'aromático': '#2f7a62',
+  'avainillado': '#a8a47e',
+  'amaderado': '#6b4527',
+  'floral': '#f07aa8',
+  'floral blanco': '#f3e9d8',
+  'rosa': '#e8558a',
+  'frutal': '#f5733b',
+  'atalcado': '#e8d9c9',
+  'almizclado': '#d6c8d8',
+  'fresco': '#9adbe8',
+  'fresco especiado': '#8fc77e',
+  'especiado': '#a8462c',
+  'cálido especiado': '#c0392b',
+  'acuático': '#4fb6d8',
+  'marino': '#3a8fc2',
+  'ozónico': '#b8dde6',
+  'verde': '#3fae4a',
+  'herbal': '#5d8f45',
+  'lavanda': '#9a86c9',
+  'cuero': '#5a3a2a',
+  'oud': '#4a2f22',
+  'tabaco': '#7a5230',
+  'atalcado suave': '#efe3d3',
+  'balsámico': '#9c6b3c',
+  'terroso': '#6b5a3e',
+  'avellana': '#a5764a',
+  'café': '#4b2e20',
+  'chocolate': '#5c3420',
+  'miel': '#e0a53b',
+  'coco': '#f2ead9',
+  'tropical': '#f4a72e',
+  'ahumado': '#5e5e5e',
+  'iris': '#a99bc9',
+  'violeta': '#8452a8',
+};
 
 // Número de WhatsApp con código de país, sin + ni espacios. Ej: 573001234567
 export const WHATSAPP = '573045624534';

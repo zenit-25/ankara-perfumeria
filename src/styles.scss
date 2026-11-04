@@ -1,0 +1,30 @@
+:root {
+  --negro: #0f0d0b;
+  --carbon: #1a1714;
+  --crema: #f6f1e9;
+  --oro: #c9a24b;
+  --oro-claro: #e2c47f;
+  --texto: #2a2520;
+  --gris: #7a7166;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--texto);
+  background: var(--crema);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.15; margin: 0 0 .5em; }
+
+a { color: inherit; text-decoration: none; }
+
+img { max-width: 100%; display: block; }

@@ -78,14 +78,16 @@ export class App {
     });
   });
 
+  // Los números de tanda solo se ven con el catálogo desplegado, y al cambiar sigue desplegado.
   protected irATanda(i: number): void {
     this.tanda.set(i);
-    this.desplegado.set(false);
     document.getElementById('catalogo-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  // Al plegar se vuelve a la primera tanda, donde están los más vendidos.
   protected plegar(): void {
     this.desplegado.set(false);
+    this.tanda.set(0);
     document.getElementById('catalogo-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 

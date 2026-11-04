@@ -107,7 +107,7 @@
         </button>
       }
 
-      @if (tandas().length > 1) {
+      @if (tandas().length > 1 && desplegado()) {
         <nav class="tandas" aria-label="Tandas del catálogo">
           @for (i of tandas(); track i) {
             <button [class.activa]="tanda() === i" [attr.aria-current]="tanda() === i ? 'page' : null" (click)="irATanda(i)">{{ i + 1 }}</button>

@@ -433,6 +433,50 @@
 
 .vacio { color: #b5ab9c; grid-column: 1 / -1; a { color: var(--oro); text-decoration: underline; } }
 
+/* Ver más y tandas del catálogo */
+.ver-mas {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin: 2rem auto 0;
+  padding: .8rem 1.8rem;
+  border: 1px solid rgba(201, 162, 75, .45);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--oro-claro);
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  letter-spacing: .03em;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+  &:hover { background: rgba(201, 162, 75, .1); border-color: var(--oro); .flecha { transform: translateY(2px); } }
+  .cuenta { font-family: var(--sans); font-style: normal; font-size: .8rem; color: #b5ab9c; }
+  .flecha { font-style: normal; transition: transform .2s; &.arriba { transform: rotate(180deg); } }
+}
+.tandas {
+  display: flex;
+  justify-content: center;
+  gap: .6rem;
+  margin-top: 2.2rem;
+  button {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    border: 1px solid rgba(201, 162, 75, .3);
+    background: #1b1916;
+    color: var(--crema);
+    font-family: var(--sans);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    &:hover { border-color: var(--oro); }
+    &.activa { background: var(--oro); border-color: var(--oro); color: var(--negro); }
+  }
+}
+.tandas-info { margin: .8rem 0 0; text-align: center; font-size: .85rem; color: #8c8376; }
+
 /* Buscador */
 .buscador {
   display: flex;

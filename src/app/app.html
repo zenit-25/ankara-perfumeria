@@ -76,8 +76,8 @@
         }
       </div>
 
-      <div class="grid">
-        @for (f of fragancias(); track f.nombre) {
+      <div class="grid" id="catalogo-grid">
+        @for (f of visibles(); track f.nombre) {
           <button class="tarjeta" (click)="abrirDetalle(f)" [attr.aria-label]="'Ver detalle de ' + f.nombre">
             <span class="tarjeta-foto">
               <img [src]="f.imagen ?? 'img/frasco-ankara.jpg'" [alt]="f.nombre" loading="lazy" />
@@ -110,6 +110,28 @@
           </p>
         }
       </div>
+
+      @if (ocultas() > 0) {
+        <button class="ver-mas" (click)="desplegado.set(true)">
+          Ver más fragancias <span class="cuenta">+{{ ocultas() }}</span>
+          <span class="flecha" aria-hidden="true">▾</span>
+        </button>
+      } @else if (desplegado() && enTanda().length > 4) {
+        <button class="ver-mas" (click)="plegar()">
+          Ver menos <span class="flecha arriba" aria-hidden="true">▾</span>
+        </button>
+      }
+
+      @if (tandas().length > 1) {
+        <nav class="tandas" aria-label="Tandas del catálogo">
+          @for (i of tandas(); track i) {
+            <button [class.activa]="tanda() === i" [attr.aria-current]="tanda() === i ? 'page' : null" (click)="irATanda(i)">{{ i + 1 }}</button>
+          }
+        </nav>
+        <p class="tandas-info">
+          Mostrando {{ tanda() * 10 + 1 }}–{{ tanda() * 10 + enTanda().length }} de {{ fragancias().length }} fragancias
+        </p>
+      }
     </div>
   </section>
 

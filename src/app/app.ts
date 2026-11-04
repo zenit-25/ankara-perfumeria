@@ -1,8 +1,27 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, effect, signal, untracked } from '@angular/core';
 import { COLORES_ACORDES, Categoria, FRAGANCIAS, Fragancia, INSTAGRAM, PROMO, TAMANOS, WHATSAPP } from './data/perfumes';
 import { Estilo, Momento, Para, Respuestas, normalizar, recomendar, similares, slug, textoBuscable } from './recomendador';
 
 type Filtro = Categoria | 'Todos';
+
+// El catálogo se muestra en tandas de 10; de cada tanda se ven 4 hasta tocar "Ver más".
+const POR_TANDA = 10;
+const VISIBLES_INICIO = 4;
+const ORDEN_ETIQUETA = { 'Más vendido': 0, 'Nuevo': 1 } as const;
+
+// Deja las etiquetadas al inicio y alterna hombre / mujer en el resto,
+// para que cada tanda de "Todos" tenga de ambos.
+function intercalar(lista: Fragancia[]): Fragancia[] {
+  const etiquetadas = lista.filter(f => f.etiqueta);
+  const hombre = lista.filter(f => !f.etiqueta && f.categoria !== 'Mujer');
+  const mujer = lista.filter(f => !f.etiqueta && f.categoria === 'Mujer');
+  const resto: Fragancia[] = [];
+  while (hombre.length || mujer.length) {
+    if (hombre.length) resto.push(hombre.shift()!);
+    if (mujer.length) resto.push(mujer.shift()!);
+  }
+  return [...etiquetadas, ...resto];
+}
 
 const PARA: Record<Categoria, string> = { Mujer: 'para Mujeres', Hombre: 'para Hombres', Unisex: 'Unisex' };
 
@@ -33,11 +52,42 @@ export class App {
   protected readonly fragancias = computed(() => {
     const f = this.filtro();
     const q = normalizar(this.busqueda());
-    return FRAGANCIAS
+    const lista = FRAGANCIAS
       // Las unisex aparecen también en Hombre y Mujer.
       .filter(p => f === 'Todos' || p.categoria === f || (f !== 'Unisex' && p.categoria === 'Unisex'))
-      .filter(p => !q || textoBuscable(p).some(t => normalizar(t).includes(q)));
+      .filter(p => !q || textoBuscable(p).some(t => normalizar(t).includes(q)))
+      // Los más vendidos y los nuevos primero, para que se vean sin desplegar.
+      .sort((a, b) => (a.etiqueta ? ORDEN_ETIQUETA[a.etiqueta] : 2) - (b.etiqueta ? ORDEN_ETIQUETA[b.etiqueta] : 2));
+    return f === 'Todos' ? intercalar(lista) : lista;
   });
+
+  protected readonly tanda = signal(0);
+  protected readonly desplegado = signal(false);
+  protected readonly tandas = computed(() => Array.from({ length: Math.ceil(this.fragancias().length / POR_TANDA) }, (_, i) => i));
+  protected readonly enTanda = computed(() => this.fragancias().slice(this.tanda() * POR_TANDA, (this.tanda() + 1) * POR_TANDA));
+  protected readonly visibles = computed(() => this.desplegado() ? this.enTanda() : this.enTanda().slice(0, VISIBLES_INICIO));
+  protected readonly ocultas = computed(() => this.enTanda().length - this.visibles().length);
+
+  // Al cambiar el filtro o la búsqueda se vuelve a la primera tanda, plegada.
+  private readonly reiniciarTandas = effect(() => {
+    this.filtro();
+    this.busqueda();
+    untracked(() => {
+      this.tanda.set(0);
+      this.desplegado.set(false);
+    });
+  });
+
+  protected irATanda(i: number): void {
+    this.tanda.set(i);
+    this.desplegado.set(false);
+    document.getElementById('catalogo-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  protected plegar(): void {
+    this.desplegado.set(false);
+    document.getElementById('catalogo-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   // Si la búsqueda no coincide con el nombre ni la casa, muestra qué nota o acorde coincidió.
   protected coincidencia(f: Fragancia): string | null {

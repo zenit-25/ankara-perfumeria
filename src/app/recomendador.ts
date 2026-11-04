@@ -41,6 +41,19 @@ export function recomendar(fragancias: Fragancia[], r: Respuestas, cuantas = 3):
     .map(x => x.f);
 }
 
+// Fragancias parecidas: comparten acordes, sobre todo los principales.
+// Se respeta el público: a quien mira una de hombre no se le sugiere una de mujer.
+export function similares(base: Fragancia, fragancias: Fragancia[], cuantas = 3): Fragancia[] {
+  const peso = (f: Fragancia) => new Map(f.acordes.map((a, i) => [a, (f.acordes.length - i) / f.acordes.length]));
+  const pb = peso(base);
+  return fragancias
+    .filter(f => f !== base && (base.categoria === 'Unisex' || f.categoria === 'Unisex' || f.categoria === base.categoria))
+    .map(f => ({ f, puntos: [...peso(f)].reduce((t, [a, w]) => t + w * (pb.get(a) ?? 0), 0) }))
+    .sort((a, b) => b.puntos - a.puntos)
+    .slice(0, cuantas)
+    .map(x => x.f);
+}
+
 // Minúsculas y sin tildes, para que "vainilla" encuentre "Vainilla" y "ambar" encuentre "ámbar".
 export function normalizar(texto: string): string {
   return texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();

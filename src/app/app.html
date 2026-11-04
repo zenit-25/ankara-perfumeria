@@ -1,3 +1,11 @@
+@if (promo) {
+  <div class="promo">
+    <span class="adorno" aria-hidden="true"></span>
+    <p>{{ promo }}</p>
+    <span class="adorno" aria-hidden="true"></span>
+  </div>
+}
+
 <header class="nav">
   <div class="contenedor nav-inner">
     <a href="#inicio" class="logo">
@@ -259,6 +267,21 @@
         </div>
         <a [href]="whatsappUrl(f)" target="_blank" rel="noopener" class="btn btn-oro btn-bloque">Pedir por WhatsApp</a>
       </div>
+
+      @if (parecidas().length) {
+        <div class="parecidas">
+          <h4>También te puede gustar</h4>
+          <div class="parecidas-lista">
+            @for (p of parecidas(); track p.nombre) {
+              <button (click)="abrirDetalle(p)">
+                <img [src]="p.imagen ?? 'img/frasco-ankara.jpg'" [alt]="p.nombre" loading="lazy" />
+                <span class="casa-mini">{{ p.casa }}</span>
+                <span class="parecida-nombre">{{ p.nombre }}</span>
+              </button>
+            }
+          </div>
+        </div>
+      }
     </div>
   </div>
 }

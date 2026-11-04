@@ -27,6 +27,49 @@
 .btn-linea { border: 1px solid var(--oro); color: var(--oro-claro); &:hover { background: var(--oro); color: var(--negro); } }
 .btn-bloque { display: block; width: 100%; }
 
+/* Franja superior de promoción */
+.promo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: .55rem 16px;
+  background: linear-gradient(90deg, #0a0908, #1d170e 50%, #0a0908);
+  border-bottom: 1px solid rgba(201, 162, 75, .25);
+  p {
+    margin: 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1rem;
+    letter-spacing: .06em;
+    color: var(--oro-claro);
+    text-align: center;
+  }
+}
+// Línea fina dorada con un rombo, a cada lado del texto.
+.adorno {
+  position: relative;
+  flex: none;
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--oro));
+  &:last-child { transform: scaleX(-1); }
+  &::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: -2.5px;
+    width: 6px;
+    height: 6px;
+    background: var(--oro);
+    transform: rotate(45deg);
+  }
+}
+@media (max-width: 520px) {
+  .promo { gap: .6rem; p { font-size: .9rem; } }
+  .adorno { width: 22px; }
+}
+
 /* Navegación */
 .nav {
   position: sticky;
@@ -302,8 +345,40 @@
   strong { color: var(--oro); letter-spacing: .1em; }
 }
 
+.parecidas {
+  margin-top: 1.8rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(255, 255, 255, .1);
+  h4 { margin: 0 0 1rem; text-align: center; font-family: var(--serif); font-size: 1.5rem; font-weight: 600; }
+}
+.parecidas-lista {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .8rem;
+  button {
+    display: flex;
+    flex-direction: column;
+    gap: .15rem;
+    padding: 0 0 .7rem;
+    border: 1px solid rgba(201, 162, 75, .2);
+    border-radius: 14px;
+    overflow: hidden;
+    background: #1b1916;
+    color: inherit;
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .2s, transform .2s;
+    &:hover { border-color: var(--oro); transform: translateY(-3px); }
+  }
+  img { width: 100%; aspect-ratio: 1; object-fit: contain; background: #fff; padding: .5rem; margin-bottom: .4rem; }
+}
+.parecida-nombre { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; line-height: 1.15; padding-inline: .4rem; }
+
 @media (max-width: 600px) {
   .modal { padding: 1.4rem 1.1rem; }
+  .parecidas-lista { gap: .5rem; }
+  .parecida-nombre { font-size: .9rem; }
   .modal-cuerpo { grid-template-columns: 1fr; }
   .modal-foto img { max-height: 220px; }
   .piramide { grid-template-columns: 1fr; }

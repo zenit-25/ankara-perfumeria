@@ -341,5 +341,8 @@ export const COLORES_ACORDES: Record<string, string> = {
 // Número de WhatsApp con código de país, sin + ni espacios. Ej: 573001234567
 export const WHATSAPP = '573045624534';
 
+// Mensaje de la franja superior. Déjalo vacío ('') para ocultarla.
+export const PROMO = 'Envío gratis en compras desde $100.000';
+
 // Usuario de Instagram, sin @.
 export const INSTAGRAM = 'ankara.perfum';

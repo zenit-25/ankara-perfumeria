@@ -1,6 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
-import { COLORES_ACORDES, Categoria, FRAGANCIAS, Fragancia, INSTAGRAM, TAMANOS, WHATSAPP } from './data/perfumes';
-import { Estilo, Momento, Para, Respuestas, normalizar, recomendar, textoBuscable } from './recomendador';
+import { COLORES_ACORDES, Categoria, FRAGANCIAS, Fragancia, INSTAGRAM, PROMO, TAMANOS, WHATSAPP } from './data/perfumes';
+import { Estilo, Momento, Para, Respuestas, normalizar, recomendar, similares, textoBuscable } from './recomendador';
 
 type Filtro = Categoria | 'Todos';
 
@@ -24,6 +24,7 @@ export class App {
   private readonly elegidos = signal<Record<string, number>>({});
 
   protected readonly instagram = INSTAGRAM;
+  protected readonly promo = PROMO;
   protected readonly busqueda = signal('');
 
   protected readonly fragancias = computed(() => {
@@ -113,9 +114,16 @@ export class App {
   // Fragancia abierta en la ventana de detalle.
   protected readonly detalle = signal<Fragancia | null>(null);
 
+  protected readonly parecidas = computed(() => {
+    const f = this.detalle();
+    return f ? similares(f, FRAGANCIAS) : [];
+  });
+
   protected abrirDetalle(f: Fragancia): void {
     this.detalle.set(f);
     document.body.style.overflow = 'hidden';
+    // Al saltar de una sugerencia a otra, vuelve al inicio de la ventana.
+    document.querySelector('.modal-fondo')?.scrollTo({ top: 0 });
   }
 
   protected cerrarDetalle(): void {

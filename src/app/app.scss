@@ -125,10 +125,10 @@
   display: flex;
   justify-content: center;
   img {
-    width: min(100%, 380px);
+    width: min(100%, 440px);
     height: auto;
-    -webkit-mask-image: radial-gradient(ellipse 60% 62% at 50% 50%, #000 55%, transparent 100%);
-    mask-image: radial-gradient(ellipse 60% 62% at 50% 50%, #000 55%, transparent 100%);
+    // Resplandor dorado suave detrás de los frascos.
+    filter: drop-shadow(0 0 40px rgba(201, 162, 75, .22)) drop-shadow(0 24px 30px rgba(0, 0, 0, .55));
     animation: flotar 7s ease-in-out infinite;
   }
 }
@@ -137,45 +137,14 @@
 @media (max-width: 760px) {
   .hero { padding: 2rem 0 4rem; }
   .hero-inner { grid-template-columns: 1fr; gap: 1rem; }
-  .hero-frasco { order: -1; img { width: 240px; } }
+  .hero-frasco { order: -1; img { width: 270px; } }
 }
-
-/* Beneficios */
-.beneficios { background: var(--carbon); color: var(--crema); padding: 1.8rem 0; }
-.beneficios-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-  text-align: center;
-  strong { display: block; font-family: var(--serif); font-size: 1.25rem; color: var(--oro); }
-  span { font-size: .85rem; color: #b5ab9c; }
-}
-@media (max-width: 760px) { .beneficios-grid { grid-template-columns: repeat(2, 1fr); } }
 
 /* Secciones */
 .seccion { padding: 5rem 0; h2 { font-size: clamp(2rem, 4vw, 2.8rem); } }
 
 /* Catálogo */
-.catalogo { background: var(--negro); color: var(--crema); }
-
-.lista-precios {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0 2rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: .75rem;
-  li {
-    border: 1px solid rgba(201, 162, 75, .35);
-    border-radius: 12px;
-    padding: .6rem 1.1rem;
-    display: flex;
-    gap: .7rem;
-    align-items: baseline;
-  }
-  span { color: #b5ab9c; font-size: .9rem; }
-  strong { color: var(--oro); font-weight: 600; }
-}
+.catalogo { background: var(--negro); color: var(--crema); padding-top: 2rem; }
 
 .filtros {
   display: flex;
@@ -356,7 +325,7 @@
   align-items: center;
   gap: 1rem;
   margin-bottom: 1rem;
-  img { width: 56px; height: auto; border-radius: 8px; }
+  img { width: 64px; height: auto; }
   p { margin: 0; color: #cfc6b8; font-size: .95rem; }
   strong { color: var(--oro); letter-spacing: .1em; }
 }

@@ -36,17 +36,8 @@
         </div>
       </div>
       <div class="hero-frasco">
-        <img src="img/frasco-ankara.jpg" alt="Frasco de perfume ANKARA" width="382" height="512" />
+        <img src="img/frascos-ankara.png" alt="Frascos de perfume ANKARA" width="725" height="790" />
       </div>
-    </div>
-  </section>
-
-  <section class="beneficios">
-    <div class="contenedor beneficios-grid">
-      <div><strong>Alta fijación</strong><span>Aromas que duran todo el día</span></div>
-      <div><strong>3 tamaños</strong><span>30 ml, 50 ml y 100 ml</span></div>
-      <div><strong>Envío nacional</strong><span>Recíbelo en la puerta de tu casa</span></div>
-      <div><strong>Asesoría</strong><span>Te ayudamos a elegir</span></div>
     </div>
   </section>
 
@@ -54,12 +45,6 @@
     <div class="contenedor">
       <p class="eyebrow">Nuestra colección</p>
       <h2>Fragancias</h2>
-
-      <ul class="lista-precios">
-        @for (t of tamanos; track t.ml) {
-          <li><span>{{ t.ml }} ml</span><strong>{{ precio(t.precio) }}</strong></li>
-        }
-      </ul>
 
       <div class="buscador">
         <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M10 2a8 8 0 0 1 6.32 12.9l5.39 5.4-1.41 1.4-5.4-5.39A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
@@ -80,7 +65,7 @@
         @for (f of visibles(); track f.nombre) {
           <button class="tarjeta" (click)="abrirDetalle(f)" [attr.aria-label]="'Ver detalle de ' + f.nombre">
             <span class="tarjeta-foto">
-              <img [src]="f.imagen ?? 'img/frasco-ankara.jpg'" [alt]="f.nombre" loading="lazy" />
+              <img [src]="f.imagen ?? 'img/frascos-ankara.png'" [alt]="f.nombre" loading="lazy" />
               @if (f.etiqueta) {
                 <span class="etiqueta" [class.nuevo]="f.etiqueta === 'Nuevo'">{{ f.etiqueta }}</span>
               }
@@ -181,7 +166,7 @@
             @for (f of recomendadas(); track f.nombre; let i = $index) {
               <button class="recomendada" (click)="abrirDetalle(f)">
                 <span class="puesto">{{ i + 1 }}</span>
-                <img [src]="f.imagen ?? 'img/frasco-ankara.jpg'" [alt]="f.nombre" />
+                <img [src]="f.imagen ?? 'img/frascos-ankara.png'" [alt]="f.nombre" />
                 <span>
                   <span class="casa-mini">{{ f.casa }}</span>
                   <span class="tarjeta-nombre">{{ f.nombre }}</span>
@@ -258,7 +243,7 @@
 
       <div class="modal-cuerpo">
         <div class="modal-foto">
-          <img [src]="f.imagen ?? 'img/frasco-ankara.jpg'" [alt]="f.nombre" />
+          <img [src]="f.imagen ?? 'img/frascos-ankara.png'" [alt]="f.nombre" />
         </div>
         <div class="modal-datos">
           <p class="casa"><span>Inspiración</span>{{ f.casa }}</p>
@@ -284,7 +269,7 @@
 
       <div class="modal-compra">
         <div class="entrega">
-          <img src="img/frasco-ankara.jpg" alt="" width="56" height="75" />
+          <img src="img/frascos-ankara.png" alt="" width="64" height="70" />
           <p>Te la entregamos en nuestro frasco <strong>ANKARA</strong>. Elige el tamaño:</p>
         </div>
         <div class="tamanos" role="radiogroup" [attr.aria-label]="'Tamaño de ' + f.nombre">
@@ -304,7 +289,7 @@
           <div class="parecidas-lista">
             @for (p of parecidas(); track p.nombre) {
               <button (click)="abrirDetalle(p)">
-                <img [src]="p.imagen ?? 'img/frasco-ankara.jpg'" [alt]="p.nombre" loading="lazy" />
+                <img [src]="p.imagen ?? 'img/frascos-ankara.png'" [alt]="p.nombre" loading="lazy" />
                 <span class="casa-mini">{{ p.casa }}</span>
                 <span class="parecida-nombre">{{ p.nombre }}</span>
               </button>

@@ -24,7 +24,9 @@ export class App {
 
   protected readonly fragancias = computed(() => {
     const f = this.filtro();
-    return f === 'Todos' ? FRAGANCIAS : FRAGANCIAS.filter(p => p.categoria === f);
+    if (f === 'Todos') return FRAGANCIAS;
+    // Las unisex aparecen también en Hombre y Mujer.
+    return FRAGANCIAS.filter(p => p.categoria === f || (f !== 'Unisex' && p.categoria === 'Unisex'));
   });
 
   protected readonly testimonios = [

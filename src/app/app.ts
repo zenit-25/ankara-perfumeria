@@ -8,7 +8,8 @@ const PARA: Record<Categoria, string> = { Mujer: 'para Mujeres', Hombre: 'para H
 @Component({
   selector: 'app-root',
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
+  host: { '(document:keydown.escape)': 'cerrarDetalle()' }
 })
 export class App {
   protected readonly filtros: Filtro[] = ['Todos', 'Mujer', 'Hombre', 'Unisex'];
@@ -65,6 +66,19 @@ export class App {
       ? `Hola, me interesa la fragancia ${f.nombre} (inspiración ${f.casa}) en ${this.tamanoElegido(f)} ml.`
       : 'Hola, quiero información sobre sus fragancias.';
     return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(texto)}`;
+  }
+
+  // Fragancia abierta en la ventana de detalle.
+  protected readonly detalle = signal<Fragancia | null>(null);
+
+  protected abrirDetalle(f: Fragancia): void {
+    this.detalle.set(f);
+    document.body.style.overflow = 'hidden';
+  }
+
+  protected cerrarDetalle(): void {
+    this.detalle.set(null);
+    document.body.style.overflow = '';
   }
 
   protected cerrarMenu(): void {

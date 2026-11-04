@@ -1,9 +1,16 @@
 // Catálogo de la tienda. Edita, agrega o quita fragancias aquí.
+// "imagen": foto del perfume original, para que el cliente lo reconozca. Ponla en /public/img/
+//   y escribe 'img/mi-foto.png'. Si no hay imagen, se usa el frasco ANKARA.
 // "acordes" va de mayor a menor intensidad (como en Fragrantica); el color se asigna solo.
-// "imagen" es opcional: pon la foto en /public/img/ y escribe 'img/mi-foto.jpg'.
-// Si no hay imagen, se usa el frasco ANKARA.
+// "notas" es opcional: la pirámide olfativa (salida, corazón y fondo).
 
 export type Categoria = 'Mujer' | 'Hombre' | 'Unisex';
+
+export interface Notas {
+  salida: string[];
+  corazon: string[];
+  fondo: string[];
+}
 
 export interface Fragancia {
   nombre: string;
@@ -11,6 +18,7 @@ export interface Fragancia {
   categoria: Categoria;
   acordes: string[];
   imagen?: string;
+  notas?: Notas;
 }
 
 export interface Tamano {
@@ -30,6 +38,7 @@ export const FRAGANCIAS: Fragancia[] = [
     nombre: 'Odyssey Mandarin Sky',
     casa: 'Armaf',
     categoria: 'Hombre',
+    imagen: 'img/odyssey-mandarin-sky.png',
     acordes: ['cítrico', 'caramelo', 'dulce', 'ámbar', 'aromático', 'avainillado', 'amaderado'],
   },
 ];

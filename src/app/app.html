@@ -60,39 +60,25 @@
 
       <div class="grid">
         @for (f of fragancias(); track f.nombre) {
-          <article class="tarjeta">
-            <header class="tarjeta-titulo">
-              <h3>{{ f.nombre }}</h3>
-              <p class="para">{{ para[f.categoria] }}</p>
-            </header>
-
-            <div class="tarjeta-cuerpo">
-              <img class="tarjeta-frasco" [src]="f.imagen ?? 'img/frasco-ankara.jpg'" [alt]="'Fragancia ' + f.nombre" loading="lazy" />
-              <div class="tarjeta-datos">
-                <p class="casa"><span>Inspiración</span>{{ f.casa }}</p>
-                <p class="acordes-titulo">acordes principales</p>
-                <ul class="acordes">
-                  @for (a of f.acordes; track a; let i = $index) {
-                    <li [style.width.%]="anchoAcorde(i, f.acordes.length)"
-                        [style.background]="colorAcorde(a)"
-                        [style.color]="textoAcorde(a)">{{ a }}</li>
-                  }
-                </ul>
-              </div>
-            </div>
-
-            <div class="tarjeta-pie">
-              <div class="tamanos" role="radiogroup" [attr.aria-label]="'Tamaño de ' + f.nombre">
-                @for (t of tamanos; track t.ml) {
-                  <button role="radio" [class.activo]="tamanoElegido(f) === t.ml" [attr.aria-checked]="tamanoElegido(f) === t.ml" (click)="elegir(f, t.ml)">
-                    <span>{{ t.ml }} ml</span>
-                    <small>{{ precio(t.precio) }}</small>
-                  </button>
+          <button class="tarjeta" (click)="abrirDetalle(f)" [attr.aria-label]="'Ver detalle de ' + f.nombre">
+            <span class="tarjeta-foto">
+              <img [src]="f.imagen ?? 'img/frasco-ankara.jpg'" [alt]="f.nombre" loading="lazy" />
+            </span>
+            <span class="tarjeta-info">
+              <span class="casa-mini">{{ f.casa }}</span>
+              <span class="tarjeta-nombre">{{ f.nombre }}</span>
+              <span class="para">{{ para[f.categoria] }}</span>
+              <span class="mini-acordes" aria-hidden="true">
+                @for (a of f.acordes.slice(0, 4); track a) {
+                  <span [style.background]="colorAcorde(a)"></span>
                 }
-              </div>
-              <a [href]="whatsappUrl(f)" target="_blank" rel="noopener" class="btn btn-oro btn-bloque">Lo quiero</a>
-            </div>
-          </article>
+              </span>
+              <span class="tarjeta-pie">
+                <span class="desde">Desde <strong>{{ precio(tamanos[0].precio) }}</strong></span>
+                <span class="ver">Ver notas →</span>
+              </span>
+            </span>
+          </button>
         } @empty {
           <p class="vacio">Pronto tendremos fragancias en esta categoría. ¡Escríbenos y te contamos!</p>
         }
@@ -135,6 +121,61 @@
     </div>
   </section>
 </main>
+
+@if (detalle(); as f) {
+  <div class="modal-fondo" (click)="cerrarDetalle()">
+    <div class="modal" role="dialog" aria-modal="true" [attr.aria-label]="f.nombre" (click)="$event.stopPropagation()">
+      <button class="modal-cerrar" (click)="cerrarDetalle()" aria-label="Cerrar">✕</button>
+
+      <header class="modal-titulo">
+        <h3>{{ f.nombre }} <span>{{ f.casa }}</span></h3>
+        <p class="para">{{ para[f.categoria] }}</p>
+      </header>
+
+      <div class="modal-cuerpo">
+        <div class="modal-foto">
+          <img [src]="f.imagen ?? 'img/frasco-ankara.jpg'" [alt]="f.nombre" />
+        </div>
+        <div class="modal-datos">
+          <p class="casa"><span>Inspiración</span>{{ f.casa }}</p>
+          <p class="acordes-titulo">acordes principales</p>
+          <ul class="acordes">
+            @for (a of f.acordes; track a; let i = $index) {
+              <li [style.width.%]="anchoAcorde(i, f.acordes.length)"
+                  [style.background]="colorAcorde(a)"
+                  [style.color]="textoAcorde(a)">{{ a }}</li>
+            }
+          </ul>
+        </div>
+      </div>
+
+      @if (f.notas; as n) {
+        <div class="piramide">
+          <h4>Pirámide olfativa</h4>
+          <div><strong>Notas de salida</strong><p>{{ n.salida.join(', ') }}</p></div>
+          <div><strong>Notas de corazón</strong><p>{{ n.corazon.join(', ') }}</p></div>
+          <div><strong>Notas de fondo</strong><p>{{ n.fondo.join(', ') }}</p></div>
+        </div>
+      }
+
+      <div class="modal-compra">
+        <div class="entrega">
+          <img src="img/frasco-ankara.jpg" alt="" width="56" height="75" />
+          <p>Te la entregamos en nuestro frasco <strong>ANKARA</strong>. Elige el tamaño:</p>
+        </div>
+        <div class="tamanos" role="radiogroup" [attr.aria-label]="'Tamaño de ' + f.nombre">
+          @for (t of tamanos; track t.ml) {
+            <button role="radio" [class.activo]="tamanoElegido(f) === t.ml" [attr.aria-checked]="tamanoElegido(f) === t.ml" (click)="elegir(f, t.ml)">
+              <span>{{ t.ml }} ml</span>
+              <small>{{ precio(t.precio) }}</small>
+            </button>
+          }
+        </div>
+        <a [href]="whatsappUrl(f)" target="_blank" rel="noopener" class="btn btn-oro btn-bloque">Pedir por WhatsApp</a>
+      </div>
+    </div>
+  </div>
+}
 
 <footer class="footer">
   <div class="contenedor footer-inner">

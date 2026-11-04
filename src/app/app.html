@@ -7,6 +7,7 @@
     <button class="menu-btn" (click)="menuAbierto.set(!menuAbierto())" aria-label="Abrir menú">☰</button>
     <nav [class.abierto]="menuAbierto()">
       <a href="#catalogo" (click)="cerrarMenu()">Fragancias</a>
+      <a href="#test" (click)="cerrarMenu()">¿Cuál elegir?</a>
       <a href="#nosotros" (click)="cerrarMenu()">Nosotros</a>
       <a href="#opiniones" (click)="cerrarMenu()">Opiniones</a>
       <a href="#contacto" (click)="cerrarMenu()">Contacto</a>
@@ -52,6 +53,15 @@
         }
       </ul>
 
+      <div class="buscador">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M10 2a8 8 0 0 1 6.32 12.9l5.39 5.4-1.41 1.4-5.4-5.39A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
+        <input type="search" placeholder="Busca perfume, marca o nota (vainilla…)"
+               [value]="busqueda()" (input)="busqueda.set($any($event.target).value)" aria-label="Buscar fragancia" />
+        @if (busqueda()) {
+          <button (click)="busqueda.set('')" aria-label="Borrar búsqueda">✕</button>
+        }
+      </div>
+
       <div class="filtros" role="tablist">
         @for (f of filtros; track f) {
           <button role="tab" [class.activo]="filtro() === f" [attr.aria-selected]="filtro() === f" (click)="filtro.set(f)">{{ f }}</button>
@@ -63,11 +73,17 @@
           <button class="tarjeta" (click)="abrirDetalle(f)" [attr.aria-label]="'Ver detalle de ' + f.nombre">
             <span class="tarjeta-foto">
               <img [src]="f.imagen ?? 'img/frasco-ankara.jpg'" [alt]="f.nombre" loading="lazy" />
+              @if (f.etiqueta) {
+                <span class="etiqueta" [class.nuevo]="f.etiqueta === 'Nuevo'">{{ f.etiqueta }}</span>
+              }
             </span>
             <span class="tarjeta-info">
               <span class="casa-mini">{{ f.casa }}</span>
               <span class="tarjeta-nombre">{{ f.nombre }}</span>
               <span class="para">{{ para[f.categoria] }}</span>
+              @if (coincidencia(f); as c) {
+                <span class="coincide">Contiene: <strong>{{ c }}</strong></span>
+              }
               <span class="mini-acordes" aria-hidden="true">
                 @for (a of f.acordes.slice(0, 4); track a) {
                   <span [style.background]="colorAcorde(a)"></span>
@@ -80,9 +96,76 @@
             </span>
           </button>
         } @empty {
-          <p class="vacio">Pronto tendremos fragancias en esta categoría. ¡Escríbenos y te contamos!</p>
+          <p class="vacio">
+            No encontramos fragancias con esa búsqueda.
+            <a [href]="whatsappUrl()" target="_blank" rel="noopener">Escríbenos</a> y te ayudamos a encontrarla.
+          </p>
         }
       </div>
+    </div>
+  </section>
+
+  <section id="test" class="seccion test">
+    <div class="contenedor test-inner">
+      <p class="eyebrow">Te ayudamos</p>
+      <h2>¿No sabes cuál elegir?</h2>
+      <p class="test-sub">Responde 3 preguntas y te recomendamos tus fragancias ideales.</p>
+
+      <div class="test-pasos" aria-hidden="true">
+        @for (n of [1, 2, 3]; track n) {
+          <span [class.hecho]="paso() > n" [class.actual]="paso() === n"></span>
+        }
+      </div>
+
+      @switch (paso()) {
+        @case (1) {
+          <h3 class="pregunta">¿Para quién es?</h3>
+          <div class="opciones">
+            @for (o of opcionesPara; track o) {
+              <button (click)="responder({ para: o })">{{ o === 'Ambos' ? 'Me da igual' : 'Para ' + (o === 'Hombre' ? 'hombre' : 'mujer') }}</button>
+            }
+          </div>
+        }
+        @case (2) {
+          <h3 class="pregunta">¿Cuándo lo usarás más?</h3>
+          <div class="opciones">
+            @for (o of opcionesMomento; track o) {
+              <button (click)="responder({ momento: o })">{{ o === 'Día' ? '☀️ De día' : '🌙 De noche' }}</button>
+            }
+          </div>
+        }
+        @case (3) {
+          <h3 class="pregunta">¿Qué tipo de aroma te gusta?</h3>
+          <div class="opciones opciones-4">
+            @for (o of opcionesEstilo; track o.estilo) {
+              <button (click)="responder({ estilo: o.estilo })">
+                {{ o.estilo }}
+                <small>{{ o.ejemplo }}</small>
+              </button>
+            }
+          </div>
+        }
+        @default {
+          <h3 class="pregunta">Te recomendamos</h3>
+          <div class="recomendadas">
+            @for (f of recomendadas(); track f.nombre; let i = $index) {
+              <button class="recomendada" (click)="abrirDetalle(f)">
+                <span class="puesto">{{ i + 1 }}</span>
+                <img [src]="f.imagen ?? 'img/frasco-ankara.jpg'" [alt]="f.nombre" />
+                <span>
+                  <span class="casa-mini">{{ f.casa }}</span>
+                  <span class="tarjeta-nombre">{{ f.nombre }}</span>
+                  <span class="ver">Ver notas →</span>
+                </span>
+              </button>
+            }
+          </div>
+          <button class="btn btn-linea" (click)="reiniciarTest()">Hacer el test de nuevo</button>
+        }
+      }
+      @if (paso() > 1 && paso() < 4) {
+        <button class="volver" (click)="reiniciarTest()">← Empezar de nuevo</button>
+      }
     </div>
   </section>
 
@@ -117,7 +200,10 @@
     <div class="contenedor contacto-inner">
       <h2>¿Listo para encontrar tu fragancia?</h2>
       <p>Escríbenos y te asesoramos sin compromiso.</p>
-      <a [href]="whatsappUrl()" target="_blank" rel="noopener" class="btn btn-oro">Hablar por WhatsApp</a>
+      <div class="acciones centradas">
+        <a [href]="whatsappUrl()" target="_blank" rel="noopener" class="btn btn-oro">Hablar por WhatsApp</a>
+        <a [href]="'https://instagram.com/' + instagram" target="_blank" rel="noopener" class="btn btn-linea">Síguenos &#64;{{ instagram }}</a>
+      </div>
     </div>
   </section>
 </main>
@@ -180,6 +266,10 @@
 <footer class="footer">
   <div class="contenedor footer-inner">
     <span class="logo"><img src="img/monograma.png" alt="" width="32" height="30" /> ANKARA</span>
+    <a class="ig" [href]="'https://instagram.com/' + instagram" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 2c-3.1 0-3.5 0-4.7.1-1.1.1-1.7.2-2.1.4-.5.2-.9.4-1.2.8-.4.4-.6.7-.8 1.2-.2.4-.3 1-.4 2.1-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1.1.2 1.7.4 2.1.2.5.4.9.8 1.2.4.4.7.6 1.2.8.4.2 1 .3 2.1.4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.7-.2 2.1-.4.5-.2.9-.4 1.2-.8.4-.4.6-.7.8-1.2.2-.4.3-1 .4-2.1.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.7-.4-2.1-.2-.5-.4-.9-.8-1.2-.4-.4-.7-.6-1.2-.8-.4-.2-1-.3-2.1-.4-1.2-.1-1.6-.1-4.7-.1zm0 3.3a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zm4.7-3.3a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z"/></svg>
+      &#64;{{ instagram }}
+    </a>
     <span>© {{ anio }} ANKARA Perfumería. Todos los derechos reservados.</span>
   </div>
 </footer>

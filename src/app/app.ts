@@ -1,5 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
-import { COLORES_ACORDES, Categoria, FRAGANCIAS, Fragancia, TAMANOS, WHATSAPP } from './data/perfumes';
+import { COLORES_ACORDES, Categoria, FRAGANCIAS, Fragancia, INSTAGRAM, TAMANOS, WHATSAPP } from './data/perfumes';
+import { Estilo, Momento, Para, Respuestas, normalizar, recomendar, textoBuscable } from './recomendador';
 
 type Filtro = Categoria | 'Todos';
 
@@ -22,12 +23,51 @@ export class App {
   // Tamaño elegido en cada tarjeta (por nombre de fragancia). Por defecto el primero.
   private readonly elegidos = signal<Record<string, number>>({});
 
+  protected readonly instagram = INSTAGRAM;
+  protected readonly busqueda = signal('');
+
   protected readonly fragancias = computed(() => {
     const f = this.filtro();
-    if (f === 'Todos') return FRAGANCIAS;
-    // Las unisex aparecen también en Hombre y Mujer.
-    return FRAGANCIAS.filter(p => p.categoria === f || (f !== 'Unisex' && p.categoria === 'Unisex'));
+    const q = normalizar(this.busqueda());
+    return FRAGANCIAS
+      // Las unisex aparecen también en Hombre y Mujer.
+      .filter(p => f === 'Todos' || p.categoria === f || (f !== 'Unisex' && p.categoria === 'Unisex'))
+      .filter(p => !q || textoBuscable(p).some(t => normalizar(t).includes(q)));
   });
+
+  // Si la búsqueda no coincide con el nombre ni la casa, muestra qué nota o acorde coincidió.
+  protected coincidencia(f: Fragancia): string | null {
+    const q = normalizar(this.busqueda());
+    if (!q || normalizar(f.nombre).includes(q) || normalizar(f.casa).includes(q)) return null;
+    return textoBuscable(f).find(t => normalizar(t).includes(q)) ?? null;
+  }
+
+  // Test "¿No sabes cuál elegir?"
+  protected readonly opcionesPara: Para[] = ['Hombre', 'Mujer', 'Ambos'];
+  protected readonly opcionesMomento: Momento[] = ['Día', 'Noche'];
+  protected readonly opcionesEstilo: { estilo: Estilo; ejemplo: string }[] = [
+    { estilo: 'Fresco', ejemplo: 'cítrico, limpio, aromático' },
+    { estilo: 'Dulce', ejemplo: 'vainilla, caramelo, frutal' },
+    { estilo: 'Floral', ejemplo: 'flores, rosas, almizcle' },
+    { estilo: 'Intenso', ejemplo: 'amaderado, especiado, ámbar' },
+  ];
+  protected readonly respuestas = signal<Partial<Respuestas>>({});
+  protected readonly paso = computed(() => {
+    const r = this.respuestas();
+    return !r.para ? 1 : !r.momento ? 2 : !r.estilo ? 3 : 4;
+  });
+  protected readonly recomendadas = computed(() => {
+    const r = this.respuestas();
+    return r.para && r.momento && r.estilo ? recomendar(FRAGANCIAS, r as Respuestas) : [];
+  });
+
+  protected responder(r: Partial<Respuestas>): void {
+    this.respuestas.update(actual => ({ ...actual, ...r }));
+  }
+
+  protected reiniciarTest(): void {
+    this.respuestas.set({});
+  }
 
   protected readonly testimonios = [
     { nombre: 'Laura M.', texto: 'Me asesoraron súper bien y encontré mi aroma ideal. ¡Dura todo el día!' },

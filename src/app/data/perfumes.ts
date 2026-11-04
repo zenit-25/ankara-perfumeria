@@ -21,6 +21,7 @@ export interface Fragancia {
   acordes: string[];
   imagen?: string;
   notas?: Notas;
+  etiqueta?: 'Más vendido' | 'Nuevo';
 }
 
 export interface Tamano {
@@ -74,6 +75,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Sauvage',
+    etiqueta: 'Más vendido',
     casa: 'Dior',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.31861.jpg',
@@ -98,6 +100,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Odyssey Mandarin Sky',
+    etiqueta: 'Nuevo',
     casa: 'Armaf',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.83132.jpg',
@@ -122,6 +125,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: '1 Million',
+    etiqueta: 'Más vendido',
     casa: 'Rabanne',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.3747.jpg',
@@ -147,6 +151,7 @@ export const FRAGANCIAS: Fragancia[] = [
   // AHLI no está en Fragrantica: datos de la descripción de la tienda Disfragancias.
   {
     nombre: 'Karpos',
+    etiqueta: 'Nuevo',
     casa: 'AHLI',
     categoria: 'Unisex',
     imagen: 'https://cdn.shopify.com/s/files/1/0847/7553/4899/files/ahli_karpos.png?v=1785460361&width=500',
@@ -190,6 +195,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Yara Candy',
+    etiqueta: 'Más vendido',
     casa: 'Lattafa',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.95752.jpg',
@@ -202,6 +208,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Good Girl',
+    etiqueta: 'Más vendido',
     casa: 'Carolina Herrera',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.39681.jpg',
@@ -214,6 +221,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Good Girl Blush',
+    etiqueta: 'Nuevo',
     casa: 'Carolina Herrera',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.78576.jpg',
@@ -332,3 +340,6 @@ export const COLORES_ACORDES: Record<string, string> = {
 
 // Número de WhatsApp con código de país, sin + ni espacios. Ej: 573001234567
 export const WHATSAPP = '573045624534';
+
+// Usuario de Instagram, sin @.
+export const INSTAGRAM = 'ankara.perfum';

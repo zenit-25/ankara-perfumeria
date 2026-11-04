@@ -27,4 +27,4 @@ export const PERFUMES: Perfume[] = [
 ];
 
 // Número de WhatsApp con código de país, sin + ni espacios. Ej: 573001234567
-export const WHATSAPP = '573000000000';
+export const WHATSAPP = '573045624534';

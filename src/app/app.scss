@@ -402,6 +402,17 @@
 
 .vacio { color: #b5ab9c; grid-column: 1 / -1; a { color: var(--oro); text-decoration: underline; } }
 
+/* Animación al desplegar: solo las tarjetas nuevas se animan, una tras otra. */
+.grid .tarjeta { animation: entrar-tarjeta .45s ease-out both; }
+@for $i from 1 through 10 {
+  .grid .tarjeta:nth-child(#{$i}) { animation-delay: #{($i - 1) * 45}ms; }
+}
+@keyframes entrar-tarjeta { from { opacity: 0; transform: translateY(18px); } }
+.panel-tandas { animation: entrar-tarjeta .45s ease-out .2s both; }
+@media (prefers-reduced-motion: reduce) {
+  .grid .tarjeta, .panel-tandas { animation: none; }
+}
+
 /* Ver más y tandas del catálogo */
 .ver-mas {
   display: flex;

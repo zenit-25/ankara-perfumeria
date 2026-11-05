@@ -66,7 +66,8 @@ export class App {
   protected readonly tandas = computed(() => Array.from({ length: Math.ceil(this.fragancias().length / POR_TANDA) }, (_, i) => i));
   protected readonly enTanda = computed(() => this.fragancias().slice(this.tanda() * POR_TANDA, (this.tanda() + 1) * POR_TANDA));
   protected readonly visibles = computed(() => this.desplegado() ? this.enTanda() : this.enTanda().slice(0, VISIBLES_INICIO));
-  protected readonly ocultas = computed(() => this.enTanda().length - this.visibles().length);
+  // Cuántas fragancias más hay en todo el catálogo (no solo en la tanda).
+  protected readonly ocultas = computed(() => this.fragancias().length - this.visibles().length);
 
   // Al cambiar el filtro o la búsqueda se vuelve a la primera tanda, plegada.
   private readonly reiniciarTandas = effect(() => {

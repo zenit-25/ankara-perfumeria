@@ -96,26 +96,31 @@
         }
       </div>
 
-      @if (ocultas() > 0) {
-        <button class="ver-mas" (click)="desplegado.set(true)">
-          Ver más fragancias <span class="cuenta">+{{ ocultas() }}</span>
-          <span class="flecha" aria-hidden="true">▾</span>
-        </button>
-      } @else if (desplegado() && enTanda().length > 4) {
-        <button class="ver-mas" (click)="plegar()">
-          Ver menos <span class="flecha arriba" aria-hidden="true">▾</span>
-        </button>
-      }
-
-      @if (tandas().length > 1 && desplegado()) {
-        <nav class="tandas" aria-label="Tandas del catálogo">
-          @for (i of tandas(); track i) {
-            <button [class.activa]="tanda() === i" [attr.aria-current]="tanda() === i ? 'page' : null" (click)="irATanda(i)">{{ i + 1 }}</button>
+      <!-- Plegado: 4 perfumes y "Ver más". Desplegado: la tanda completa, las casillas
+           de tandas y, al final, "Ver menos", todo como un mismo panel. -->
+      @if (!desplegado()) {
+        @if (ocultas() > 0) {
+          <button class="ver-mas" (click)="desplegado.set(true)">
+            Ver más fragancias <span class="cuenta">+{{ ocultas() }}</span>
+            <span class="flecha" aria-hidden="true">▾</span>
+          </button>
+        }
+      } @else {
+        <div class="panel-tandas">
+          @if (tandas().length > 1) {
+            <nav class="tandas" aria-label="Tandas del catálogo">
+              @for (i of tandas(); track i) {
+                <button [class.activa]="tanda() === i" [attr.aria-current]="tanda() === i ? 'page' : null" (click)="irATanda(i)">{{ i + 1 }}</button>
+              }
+            </nav>
+            <p class="tandas-info">
+              Mostrando {{ tanda() * 10 + 1 }}–{{ tanda() * 10 + enTanda().length }} de {{ fragancias().length }} fragancias
+            </p>
           }
-        </nav>
-        <p class="tandas-info">
-          Mostrando {{ tanda() * 10 + 1 }}–{{ tanda() * 10 + enTanda().length }} de {{ fragancias().length }} fragancias
-        </p>
+          <button class="ver-mas" (click)="plegar()">
+            Ver menos <span class="flecha arriba" aria-hidden="true">▾</span>
+          </button>
+        </div>
       }
     </div>
   </section>

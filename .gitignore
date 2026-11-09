@@ -42,3 +42,6 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Hojas para imprimir generadas (se regeneran con impresion/generar.js)
+impresion/*.html

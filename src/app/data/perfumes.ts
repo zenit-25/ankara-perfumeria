@@ -581,7 +581,7 @@ export const FRAGANCIAS: Fragancia[] = [
     },
   },
   {
-    nombre: 'J\x27adore',
+    nombre: 'J\'adore',
     codigo: 'F12',
     casa: 'Dior',
     categoria: 'Mujer',

@@ -64,6 +64,22 @@ export class App {
   protected readonly tanda = signal(0);
   protected readonly desplegado = signal(false);
   protected readonly tandas = computed(() => Array.from({ length: Math.ceil(this.fragancias().length / POR_TANDA) }, (_, i) => i));
+  // Casillas a mostrar: con muchas tandas solo la primera, la última y las vecinas
+  // de la actual, con "…" en los saltos, para que quepan en una línea en el celular.
+  protected readonly casillas = computed<(number | '…')[]>(() => {
+    const total = this.tandas().length;
+    const actual = this.tanda();
+    if (total <= 7) return this.tandas();
+    const visibles = [...new Set([0, actual - 1, actual, actual + 1, total - 1])]
+      .filter(i => i >= 0 && i < total)
+      .sort((a, b) => a - b);
+    const resultado: (number | '…')[] = [];
+    visibles.forEach((i, k) => {
+      if (k > 0 && i - visibles[k - 1] > 1) resultado.push('…');
+      resultado.push(i);
+    });
+    return resultado;
+  });
   protected readonly enTanda = computed(() => this.fragancias().slice(this.tanda() * POR_TANDA, (this.tanda() + 1) * POR_TANDA));
   protected readonly visibles = computed(() => this.desplegado() ? this.enTanda() : this.enTanda().slice(0, VISIBLES_INICIO));
   // Cuántas fragancias más hay en todo el catálogo (no solo en la tanda).
@@ -95,7 +111,7 @@ export class App {
   // Si la búsqueda no coincide con el nombre ni la casa, muestra qué nota o acorde coincidió.
   protected coincidencia(f: Fragancia): string | null {
     const q = normalizar(this.busqueda());
-    if (!q || normalizar(f.nombre).includes(q) || normalizar(f.casa).includes(q)) return null;
+    if (!q || [f.nombre, f.casa, f.codigo ?? ''].some(t => normalizar(t).includes(q))) return null;
     return textoBuscable(f).find(t => normalizar(t).includes(q)) ?? null;
   }
 
@@ -162,7 +178,7 @@ export class App {
 
   protected whatsappUrl(f?: Fragancia): string {
     const texto = f
-      ? `Hola, me interesa la fragancia ${f.nombre} (inspiración ${f.casa}) en ${this.tamanoElegido(f)} ml.\n${this.enlace(f)}`
+      ? `Hola, me interesa la fragancia ${f.codigo ? f.codigo + ' – ' : ''}${f.nombre} (inspiración ${f.casa}) en ${this.tamanoElegido(f)} ml.\n${this.enlace(f)}`
       : 'Hola, quiero información sobre sus fragancias.';
     return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(texto)}`;
   }

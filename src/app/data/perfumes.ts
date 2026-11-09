@@ -22,6 +22,8 @@ export interface Fragancia {
   imagen?: string;
   notas?: Notas;
   etiqueta?: 'Más vendido' | 'Nuevo';
+  // Código de tu catálogo (F01, M27…). Llega en el pedido por WhatsApp.
+  codigo?: string;
 }
 
 export interface Tamano {
@@ -39,6 +41,7 @@ export const TAMANOS: Tamano[] = [
 export const FRAGANCIAS: Fragancia[] = [
   {
     nombre: 'Toy Boy',
+    codigo: 'M24',
     casa: 'Moschino',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.55858.jpg',
@@ -51,6 +54,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Eros Flame',
+    codigo: 'M77',
     casa: 'Versace',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.52180.jpg',
@@ -63,6 +67,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Valentino Uomo Born in Roma',
+    codigo: 'M97',
     casa: 'Valentino',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.55963.jpg',
@@ -75,6 +80,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Sauvage',
+    codigo: 'M27',
     etiqueta: 'Más vendido',
     casa: 'Dior',
     categoria: 'Hombre',
@@ -88,6 +94,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Phantom',
+    codigo: 'M37',
     casa: 'Rabanne',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.68226.jpg',
@@ -100,6 +107,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Odyssey Mandarin Sky',
+    codigo: 'M98',
     etiqueta: 'Nuevo',
     casa: 'Armaf',
     categoria: 'Hombre',
@@ -113,6 +121,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Bleu de Chanel',
+    codigo: 'M70',
     casa: 'Chanel',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.9099.jpg',
@@ -125,6 +134,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: '1 Million',
+    codigo: 'M05',
     etiqueta: 'Más vendido',
     casa: 'Rabanne',
     categoria: 'Hombre',
@@ -138,6 +148,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Le Male',
+    codigo: 'M14',
     casa: 'Jean Paul Gaultier',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.430.jpg',
@@ -151,6 +162,7 @@ export const FRAGANCIAS: Fragancia[] = [
   // AHLI no está en Fragrantica: datos de la descripción de la tienda Disfragancias.
   {
     nombre: 'Karpos',
+    codigo: 'M54',
     etiqueta: 'Nuevo',
     casa: 'AHLI',
     categoria: 'Unisex',
@@ -159,6 +171,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'CK One',
+    codigo: 'M79',
     casa: 'Calvin Klein',
     categoria: 'Unisex',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.276.jpg',
@@ -171,6 +184,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Ralph',
+    codigo: 'F11',
     casa: 'Ralph Lauren',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.826.jpg',
@@ -183,6 +197,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Toy 2',
+    codigo: 'F19',
     casa: 'Moschino',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.51589.jpg',
@@ -195,6 +210,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Yara Candy',
+    codigo: 'F57',
     etiqueta: 'Más vendido',
     casa: 'Lattafa',
     categoria: 'Mujer',
@@ -208,6 +224,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Good Girl',
+    codigo: 'F01',
     etiqueta: 'Más vendido',
     casa: 'Carolina Herrera',
     categoria: 'Mujer',
@@ -234,6 +251,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Thank U, Next',
+    codigo: 'F66',
     casa: 'Ariana Grande',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.56741.jpg',
@@ -246,6 +264,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'La Vie Est Belle',
+    codigo: 'F16',
     casa: 'Lancôme',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.14982.jpg',
@@ -282,6 +301,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Cloud',
+    codigo: 'F39',
     casa: 'Ariana Grande',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.50384.jpg',
@@ -294,6 +314,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Eros',
+    codigo: 'M36',
     casa: 'Versace',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.16657.jpg',
@@ -306,6 +327,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Invictus',
+    codigo: 'M01',
     casa: 'Rabanne',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.18471.jpg',
@@ -318,6 +340,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Acqua di Giò Profumo',
+    codigo: 'M74',
     casa: 'Giorgio Armani',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.29727.jpg',
@@ -342,6 +365,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Ultra Male',
+    codigo: 'M66',
     casa: 'Jean Paul Gaultier',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.30947.jpg',
@@ -354,6 +378,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Le Beau',
+    codigo: 'M109',
     casa: 'Jean Paul Gaultier',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.55785.jpg',
@@ -366,6 +391,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Y',
+    codigo: 'M110',
     casa: 'Yves Saint Laurent',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.50757.jpg',
@@ -378,6 +404,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Club de Nuit Intense Man',
+    codigo: 'M40',
     casa: 'Armaf',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.34696.jpg',
@@ -390,6 +417,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Asad',
+    codigo: 'M62',
     casa: 'Lattafa',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.72821.jpg',
@@ -426,6 +454,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: '212 VIP Men',
+    codigo: 'M10',
     casa: 'Carolina Herrera',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.12865.jpg',
@@ -438,6 +467,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: '212 VIP Black',
+    codigo: 'M49',
     casa: 'Carolina Herrera',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.46093.jpg',
@@ -450,6 +480,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Bad Boy',
+    codigo: 'M25',
     casa: 'Carolina Herrera',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.55449.jpg',
@@ -462,6 +493,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: '360° for Men',
+    codigo: 'M28',
     casa: 'Perry Ellis',
     categoria: 'Hombre',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.1904.jpg',
@@ -474,6 +506,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: '360°',
+    codigo: 'F14',
     casa: 'Perry Ellis',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.1901.jpg',
@@ -486,6 +519,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Olympéa',
+    codigo: 'F04',
     casa: 'Rabanne',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.31666.jpg',
@@ -498,6 +532,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Lady Million',
+    codigo: 'F42',
     casa: 'Rabanne',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.9045.jpg',
@@ -510,6 +545,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Scandal',
+    codigo: 'F93',
     casa: 'Jean Paul Gaultier',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.45651.jpg',
@@ -546,6 +582,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'J\x27adore',
+    codigo: 'F12',
     casa: 'Dior',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.210.jpg',
@@ -558,6 +595,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Coco Mademoiselle',
+    codigo: 'F55',
     casa: 'Chanel',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.611.jpg',
@@ -570,6 +608,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Light Blue',
+    codigo: 'F10',
     casa: 'Dolce & Gabbana',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.485.jpg',
@@ -582,6 +621,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Idôle',
+    codigo: 'F53',
     casa: 'Lancôme',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.55795.jpg',
@@ -594,6 +634,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: '212 VIP Rosé',
+    codigo: 'F05',
     casa: 'Carolina Herrera',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.22857.jpg',
@@ -618,6 +659,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Bright Crystal',
+    codigo: 'F84',
     casa: 'Versace',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.632.jpg',
@@ -630,6 +672,7 @@ export const FRAGANCIAS: Fragancia[] = [
   },
   {
     nombre: 'Valentino Donna Born in Roma',
+    codigo: 'F58',
     casa: 'Valentino',
     categoria: 'Mujer',
     imagen: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.55805.jpg',

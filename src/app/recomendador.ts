@@ -68,5 +68,5 @@ export function slug(f: Fragancia): string {
 // para que al buscar "vainilla" se muestre la nota y no el acorde "avainillado".
 export function textoBuscable(f: Fragancia): string[] {
   const notas = f.notas ? [...f.notas.salida, ...f.notas.corazon, ...f.notas.fondo] : [];
-  return [f.nombre, f.casa, ...notas, ...f.acordes];
+  return [f.nombre, f.casa, ...(f.codigo ? [f.codigo] : []), ...notas, ...f.acordes];
 }

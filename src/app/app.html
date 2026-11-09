@@ -71,7 +71,12 @@
               }
             </span>
             <span class="tarjeta-info">
-              <span class="casa-mini">{{ f.casa }}</span>
+              <span class="casa-mini">
+                {{ f.casa }}
+                @if (f.codigo) {
+                  <span class="codigo">{{ f.codigo }}</span>
+                }
+              </span>
               <span class="tarjeta-nombre">{{ f.nombre }}</span>
               <span class="para">{{ para[f.categoria] }}</span>
               @if (coincidencia(f); as c) {
@@ -109,9 +114,15 @@
         <div class="panel-tandas">
           @if (tandas().length > 1) {
             <nav class="tandas" aria-label="Tandas del catálogo">
-              @for (i of tandas(); track i) {
-                <button [class.activa]="tanda() === i" [attr.aria-current]="tanda() === i ? 'page' : null" (click)="irATanda(i)">{{ i + 1 }}</button>
+              <button class="flecha-tanda" [disabled]="tanda() === 0" (click)="irATanda(tanda() - 1)" aria-label="Tanda anterior">‹</button>
+              @for (c of casillas(); track $index) {
+                @if (c === '…') {
+                  <span class="salto" aria-hidden="true">…</span>
+                } @else {
+                  <button [class.activa]="tanda() === c" [attr.aria-current]="tanda() === c ? 'page' : null" (click)="irATanda(c)">{{ c + 1 }}</button>
+                }
               }
+              <button class="flecha-tanda" [disabled]="tanda() === tandas().length - 1" (click)="irATanda(tanda() + 1)" aria-label="Tanda siguiente">›</button>
             </nav>
             <p class="tandas-info">
               Mostrando {{ tanda() * 10 + 1 }}–{{ tanda() * 10 + enTanda().length }} de {{ fragancias().length }} fragancias
@@ -235,7 +246,12 @@
 
       <header class="modal-titulo">
         <h3>{{ f.nombre }} <span>{{ f.casa }}</span></h3>
-        <p class="para">{{ para[f.categoria] }}</p>
+        <p class="para">
+          {{ para[f.categoria] }}
+          @if (f.codigo) {
+            <span class="codigo codigo-grande">Ref. {{ f.codigo }}</span>
+          }
+        </p>
         <button class="compartir" (click)="compartir(f)">
           @if (copiado()) {
             ✓ ¡Enlace copiado!

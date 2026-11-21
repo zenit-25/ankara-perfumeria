@@ -46,11 +46,12 @@ jobs:
           # Llama a la API, registra código y respuesta, y marca fallo si no es 2xx.
           api() {
             local name="$1"; shift
-            local code
-            code=$(curl -sS -o resp.txt -w '%{http_code}' \
+            local out code redirect
+            out=$(curl -sS -o resp.txt -w '%{http_code} %{redirect_url}' \
               -H "Authorization: Bearer $API_KEY" -H "Accept: application/json" \
-              -H "Content-Type: application/json" "$@")
-            echo "$name -> HTTP $code $(head -c 400 resp.txt)" | tee -a "$LOG"
+              -H "Content-Type: application/json" -H "X-Requested-With: XMLHttpRequest" "$@")
+            code=${out%% *}; redirect=${out#* }
+            echo "$name -> HTTP $code redirect=[${redirect%%\?*}] $(head -c 400 resp.txt)" | tee -a "$LOG"
             [[ "$code" =~ ^2 ]] || FAILED=1
           }
 

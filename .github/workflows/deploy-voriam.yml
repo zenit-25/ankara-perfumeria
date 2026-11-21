@@ -1,0 +1,67 @@
+name: Publicar en Voriam
+
+# Cada push a main compila la web y la sube al servidor de Voriam
+# usando la API del panel (compatible con Pterodactyl).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: voriam
+  cancel-in-progress: true
+
+env:
+  PANEL: https://panel.voriamtechnologies.com
+  SERVER_ID: 089506a7
+  SITE_URL: http://sftp-n1.voriamtechnologies.com:3011
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx ng build --base-href /
+
+      - name: Empaquetar
+        run: tar -czf ankara-deploy.tar.gz server.js dist/perfumeria-landing/browser
+
+      - name: Subir al servidor
+        env:
+          API_KEY: ${{ secrets.VORIAM_API_KEY }}
+        run: |
+          set -euo pipefail
+          api() {
+            curl -fsS -H "Authorization: Bearer $API_KEY" -H "Accept: application/json" \
+              -H "Content-Type: application/json" "$@"
+          }
+          BASE="$PANEL/api/client/servers/$SERVER_ID"
+
+          echo "==> Pidiendo URL de subida"
+          UPLOAD_URL=$(api "$BASE/files/upload" | jq -r '.attributes.url')
+
+          echo "==> Subiendo paquete"
+          curl -fsS -F "files=@ankara-deploy.tar.gz" "${UPLOAD_URL}&directory=/" > /dev/null
+
+          echo "==> Reemplazando la versión anterior"
+          api -X POST "$BASE/files/delete" -d '{"root":"/","files":["dist"]}' || true
+          api -X POST "$BASE/files/decompress" -d '{"root":"/","file":"ankara-deploy.tar.gz"}'
+          api -X POST "$BASE/files/delete" -d '{"root":"/","files":["ankara-deploy.tar.gz"]}'
+
+          echo "==> Reiniciando servidor"
+          api -X POST "$BASE/power" -d '{"signal":"restart"}'
+
+      - name: Comprobar que la web responde
+        run: |
+          for i in $(seq 1 12); do
+            if curl -fsS -m 10 "$SITE_URL/" | grep -q '<title>'; then
+              echo "La web responde en $SITE_URL"; exit 0
+            fi
+            sleep 5
+          done
+          echo "La web no respondió a tiempo"; exit 1

@@ -28,52 +28,45 @@ jobs:
       - run: npm ci
       - run: npx ng build --base-href /
 
-      - name: Empaquetar
-        run: |
-          echo "$GITHUB_SHA" > dist/perfumeria-landing/browser/version.txt
-          tar -czf ankara-deploy.tar.gz server.js dist/perfumeria-landing/browser
+      - name: Marcar versión
+        run: echo "$GITHUB_SHA" > dist/perfumeria-landing/browser/version.txt
 
+      # El panel no permite operaciones de escritura (borrar, extraer, reiniciar)
+      # con API key, pero sí pedir URLs de subida. Por eso se sube cada carpeta de
+      # la build directamente a su ruta en el servidor; los archivos se sobrescriben.
+      # server.js lee del disco en cada petición, así que no hace falta reiniciar
+      # (solo si cambia server.js: reiniciar a mano desde el panel).
       - name: Subir al servidor
         env:
           API_KEY: ${{ secrets.VORIAM_API_KEY }}
         run: |
-          set -uo pipefail
+          set -euo pipefail
           BASE="$PANEL/api/client/servers/$SERVER_ID"
-          LOG=deploy.log
-          : > "$LOG"
-          FAILED=0
 
-          # Llama a la API, registra código y respuesta, y marca fallo si no es 2xx.
-          api() {
-            local name="$1"; shift
-            local out code redirect
-            out=$(curl -sS -o resp.txt -w '%{http_code} %{redirect_url}' \
-              -H "Authorization: Bearer $API_KEY" -H "Accept: application/json" \
-              -H "Content-Type: application/json" -H "X-Requested-With: XMLHttpRequest" "$@")
-            code=${out%% *}; redirect=${out#* }
-            echo "$name -> HTTP $code redirect=[${redirect%%\?*}] $(head -c 400 resp.txt)" | tee -a "$LOG"
-            [[ "$code" =~ ^2 ]] || FAILED=1
+          # Sube los archivos dados a una carpeta del servidor (falla si no es 2xx).
+          upload_to() {
+            local dir="$1"; shift
+            local url args=() code
+            url=$(curl -fsS -H "Authorization: Bearer $API_KEY" -H "Accept: application/json" \
+              "$BASE/files/upload" | jq -r '.attributes.url')
+            for f in "$@"; do args+=(-F "files=@$f"); done
+            code=$(curl -sS -o resp.txt -w '%{http_code}' "${args[@]}" \
+              "${url}&directory=$(jq -rn --arg d "$dir" '$d|@uri')")
+            echo "$dir <- $# archivo(s): HTTP $code"
+            [[ "$code" =~ ^2 ]] || { head -c 300 resp.txt; echo; exit 1; }
           }
 
-          upload() {
-            local url code
-            api "upload-url" "$BASE/files/upload"
-            url=$(jq -r '.attributes.url' resp.txt)
-            code=$(curl -sS -o resp.txt -w '%{http_code}' -F "files=@$1" "${url}&directory=/")
-            echo "upload $1 -> HTTP $code $(head -c 200 resp.txt)" | tee -a "$LOG"
-            [[ "$code" =~ ^2 ]] || FAILED=1
-          }
+          upload_to / server.js
 
-          upload ankara-deploy.tar.gz
-          api "delete-dist" -X POST "$BASE/files/delete" -d '{"root":"/","files":["dist"]}'
-          api "decompress" -X POST "$BASE/files/decompress" -d '{"root":"/","file":"ankara-deploy.tar.gz"}'
-          api "delete-archive" -X POST "$BASE/files/delete" -d '{"root":"/","files":["ankara-deploy.tar.gz"]}'
-          api "restart" -X POST "$BASE/power" -d '{"signal":"restart"}'
-
-          # Deja el registro en el servidor para poder revisarlo desde el panel.
-          RESULT=$FAILED
-          upload "$LOG" || true
-          exit $RESULT
+          cd dist/perfumeria-landing/browser
+          # Una subida por carpeta; version.txt va al final para marcar el despliegue completo.
+          find . -type d | sort | while read -r d; do
+            mapfile -t files < <(find "$d" -maxdepth 1 -type f ! -name version.txt | sort)
+            [ ${#files[@]} -eq 0 ] && continue
+            sub="${d#.}"   # "." -> "", "./img" -> "/img"
+            upload_to "/dist/perfumeria-landing/browser${sub}" "${files[@]}"
+          done
+          upload_to /dist/perfumeria-landing/browser version.txt
 
       - name: Comprobar que la web sirve esta versión
         run: |
